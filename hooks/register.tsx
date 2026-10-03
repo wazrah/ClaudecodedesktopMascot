@@ -20,6 +20,14 @@ function styleList(current: LookName): string {
   return `Pick a style with /mascot style <name>:\n${lines.join('\n')}`
 }
 
+/** What `/mascot` takes; shown for `help` and for anything it does not know, rather than guessing. */
+const USAGE = [
+  '/mascot · hide or show it',
+  '/mascot on · /mascot off',
+  `/mascot style · list the styles (${LOOK_NAMES.join(', ')})`,
+  '/mascot style <name> · switch style; /mascot <name> works too',
+].join('\n')
+
 let lastMinute = 0
 
 /** Moves the clock line on when the minute turns; a write only then, so the band redraws once a minute. */
@@ -39,7 +47,7 @@ export const register: Register = on => {
     await $.command.register({
       name: 'mascot',
       description: 'Show or hide the little Claude mascot above the prompt, or pick its style',
-      argumentHint: '[on|off|style [classic|behind]]',
+      argumentHint: '[on|off|style [classic|behind]|help]',
     })
     const measured = await $.session.usage()
     const id = await $.session.model()
@@ -71,6 +79,9 @@ export const register: Register = on => {
       await $.store.set(STORE_LOOK, picked)
       return { text: `Mascot style: ${picked}, ${LOOKS[picked].description}.` }
     }
+    if (arg === 'help') return { text: USAGE }
+    // Only a bare `/mascot` toggles: an unknown word answers with the usage and changes nothing.
+    if (arg !== '' && arg !== 'on' && arg !== 'off') return { text: `No /mascot option "${arg}".\n${USAGE}` }
     const value = arg === 'on' ? true : arg === 'off' ? false : !(await read($, isShown))
     await update($, isShown, () => value)
     await $.store.set(STORE_SHOWN, value)

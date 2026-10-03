@@ -44,13 +44,34 @@ The usage figures are the ones Claude Code already has from its last reply, so t
 
 3. Quit the desktop app fully and open it again.
 
+## Update
+
+Pull the latest version, then quit the desktop app fully and open it again:
+
+```bash
+git -C ~/code/ClaudecodedesktopMascot pull
+```
+
+The app loads the mod once, when it starts, so new looks and commands only appear after that restart; until then the version it started with keeps running.
+
 ## Use
 
-- `/mascot` hides or shows it; `/mascot on` and `/mascot off` work too. The choice is remembered across sessions.
-- `/mascot style` lists the two styles, and `/mascot style <name>` (or just `/mascot <name>`) switches. The choice is remembered across sessions.
-  - `classic` (the default): the laptop at its side, as described above.
-  - `behind`: it sits behind the laptop, seen from the back of the lid, with its eyes peeking over the top. Both hands on the keys while it types, one hand for the coffee, and the lid lifted open or pushed shut in four steps.
-- It draws in the desktop app only. In the terminal it draws nothing.
+| Command | What it does |
+| --- | --- |
+| `/mascot` | Hides or shows it. |
+| `/mascot on`, `/mascot off` | Shows or hides it. |
+| `/mascot style` | Lists the styles and marks the one in use. |
+| `/mascot style <name>`, or `/mascot <name>` | Switches style. |
+| `/mascot help` | Lists these commands. |
+
+Both choices, shown or hidden and the style, are remembered across sessions. An option it doesn't know changes nothing and shows this list instead.
+
+The two styles:
+
+- `classic` (the default): the laptop at its side, as described above.
+- `behind`: it sits behind the laptop, seen from the back of the lid, with its eyes peeking over the top. Both hands on the keys while it types, one hand for the coffee, and the lid lifted open or pushed shut in four steps.
+
+It draws in the desktop app only. In the terminal it draws nothing.
 
 ## Privacy and cost
 
