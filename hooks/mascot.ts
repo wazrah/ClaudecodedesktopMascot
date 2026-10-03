@@ -95,6 +95,15 @@ function styles(mode: Mode): string {
     // The frame's page takes the app's colour scheme, or Chromium paints it an
     // opaque white behind the art; and no scrollbars from an inline SVG's gap.
     ':root{color-scheme:light dark}html,body{margin:0;overflow:hidden;background:transparent}svg{display:block}',
+    // The lid swings once when the drawing starts, then the laptop settles.
+    `.lid-swing{animation:lid-out ${LID_SECONDS}s step-end forwards}@keyframes lid-out{0%{opacity:1}100%{opacity:0}}`,
+    `.lid-settled{opacity:0;animation:lid-in ${LID_SECONDS}s step-end forwards}@keyframes lid-in{0%{opacity:0}100%{opacity:1}}`,
+    ...LID_STEPS.map((_, i) => {
+      const from = Math.round(((i * FRAME_SECONDS) / LID_SECONDS) * 100)
+      const to = i === LID_STEPS.length - 1 ? 100 : Math.round((((i + 1) * FRAME_SECONDS) / LID_SECONDS) * 100)
+      const keys = i === 0 ? `0%{opacity:1}${to}%{opacity:0}` : `0%{opacity:0}${from}%{opacity:1}${to}%{opacity:${to === 100 ? 1 : 0}}`
+      return `@keyframes lid${i}{${keys}}.lid${i}{animation:lid${i} ${LID_SECONDS}s step-end forwards}`
+    }),
     ...layers,
     '#hit{cursor:pointer}',
     '#eyeLift{transition:transform .2s}',
@@ -116,18 +125,43 @@ function styles(mode: Mode): string {
     // The idle look-about: a glance left, back, a glance right, back.
     '.look{animation:look 40s step-end infinite}',
     '@keyframes look{0%{transform:translateX(0)}5%{transform:translateX(-1px)}10%{transform:translateX(0)}15%{transform:translateX(1px)}20%{transform:translateX(0)}}',
-    '@media (prefers-reduced-motion:reduce){.tap,.steam,.z,.glow,.blink,.look{animation:none}}',
+    '@media (prefers-reduced-motion:reduce){.tap,.steam,.z,.glow,.blink,.look{animation:none}.lid-swing{display:none}.lid-settled{opacity:1;animation:none}}',
   ].join('')
 }
 
-function laptop(mode: Mode): string {
-  if (mode === 'idle') return rect(22, 16.6, 9, 0.6, INK.lid) + rect(22, 17.2, 9, 0.8, INK.edge)
+const DECK = rect(22, 16.8, 9, 1.2, INK.deck) + rect(22, 17.6, 9, 0.4, INK.edge)
+const OPEN =
+  DECK +
+  `<polygon points="30.4,16.9 31.6,16.9 33.4,10.4 32.2,10.4" fill="${INK.edge}"/>` +
+  `<polygon class="glow" points="30,16.8 30.6,16.8 32.4,10.6 31.8,10.6" fill="${INK.glow}"/>`
+const SHUT = rect(22, 16.6, 9, 0.6, INK.lid) + rect(22, 17.2, 9, 0.8, INK.edge)
+
+/** The lid on its hinge at the deck's far end, at an angle from the deck; the screen lit while it faces him. */
+function lidAt(angle: number): string {
+  const hinge = { x: 31, y: 16.85 }
+  const length = 6.7
+  const thick = 1.2
+  const a = (angle * Math.PI) / 180
+  const along = { x: Math.cos(a), y: -Math.sin(a) }
+  const back = { x: Math.sin(a), y: Math.cos(a) }
+  const at = (s: number, t: number) =>
+    `${Math.round((hinge.x + along.x * s + back.x * t) * 100) / 100},${Math.round((hinge.y + along.y * s + back.y * t) * 100) / 100}`
   return (
-    rect(22, 16.8, 9, 1.2, INK.deck) +
-    rect(22, 17.6, 9, 0.4, INK.edge) +
-    `<polygon points="30.4,16.9 31.6,16.9 33.4,10.4 32.2,10.4" fill="${INK.edge}"/>` +
-    `<polygon class="glow" points="30,16.8 30.6,16.8 32.4,10.6 31.8,10.6" fill="${INK.glow}"/>`
+    `<polygon points="${at(0, 0)} ${at(length, 0)} ${at(length, thick)} ${at(0, thick)}" fill="${INK.edge}"/>` +
+    `<polygon class="glow" points="${at(0.3, 0)} ${at(length - 0.2, 0)} ${at(length - 0.2, -0.5)} ${at(0.3, -0.5)}" fill="${INK.glow}"/>`
   )
+}
+
+/** The laptop from open to shut in four steps: the lid tips past upright, then down onto the deck. */
+const LID_STEPS = [OPEN, DECK + lidAt(110), DECK + lidAt(145), SHUT] as const
+const FRAME_SECONDS = 0.22
+const LID_SECONDS = 1.1
+
+/** The lid swings shut for a break or open for work, then the laptop stays as it landed. */
+function laptop(mode: Mode): string {
+  const steps = mode === 'idle' ? LID_STEPS : [...LID_STEPS].reverse()
+  const swing = steps.map((step, i) => `<g class="lid${i}">${step}</g>`).join('')
+  return `<g class="lid-swing">${swing}</g><g class="lid-settled">${mode === 'idle' ? SHUT : OPEN}</g>`
 }
 
 function mug(left: number, top: number): string {

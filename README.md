@@ -9,6 +9,7 @@ A tiny pixel Claude that lives above the prompt in the Claude Code desktop app (
 
 **The mascot** sits on the right, about 90 × 48 px, with no background of its own:
 
+- When Claude starts working, the laptop lid swings open in four steps; when Claude finishes, it swings shut.
 - While Claude works, it types on a little laptop, stops for a sip of coffee, and stretches.
 - When Claude is idle, the laptop is closed: it looks around, sips coffee, naps (little z's float up), then stretches.
 - Click it and it hops, a heart pops up, and its eyes go happy ^ ^. Hover and it glances up.
