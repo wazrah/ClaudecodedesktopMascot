@@ -5,7 +5,7 @@
  *
  * Coordinates are art pixels on a 36 x 19 grid; UNIT sets CSS pixels per art pixel.
  */
-import type { Mode } from '../types'
+import type { Mode } from '../../types'
 
 const UNIT = 2.5
 const COLS = 36

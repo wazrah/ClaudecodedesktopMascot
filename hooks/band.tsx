@@ -4,12 +4,12 @@
  */
 import type { ElementTable } from 'claude-code'
 
-import type { Meter, Mode, Usage } from '../types'
+import type { LookName, Meter, Mode, Usage } from '../types'
 import { bar, headline, level, percentLabel, resetDay, resetTime } from './info'
-import { HEIGHT, mascotSvg, WIDTH } from './mascot'
+import { LOOK_NAMES, LOOKS } from './looks'
 
 /** Everything the band draws from. */
-export type BandView = { mode: Mode; at: number; model: string | null; usage: Usage; columns: number }
+export type BandView = { look: LookName; mode: Mode; at: number; model: string | null; usage: Usage; columns: number }
 
 const ALT: Record<Mode, string> = {
   working: 'A little Claude mascot typing on a laptop',
@@ -17,10 +17,12 @@ const ALT: Record<Mode, string> = {
 }
 
 /**
- * One drawing per mode, built once. The band gets the same source until a
- * turn starts or ends, so the loop (and its breaks) plays on uninterrupted.
+ * One drawing per look and mode, built once. The band gets the same source
+ * until a turn starts or ends, so the loop (and its breaks) plays on uninterrupted.
  */
-const SOURCES: Record<Mode, string> = { working: mascotSvg('working'), idle: mascotSvg('idle') }
+const SOURCES = Object.fromEntries(
+  LOOK_NAMES.map(look => [look, { working: LOOKS[look].svg('working'), idle: LOOKS[look].svg('idle') }]),
+) as Record<LookName, Record<Mode, string>>
 
 /** Below this many columns the gauges drop their bars, so the line still fits beside the mascot. */
 const ROOMY_COLUMNS = 72
@@ -64,7 +66,13 @@ export function drawBand({ Box, Svg, Text }: ElementTable<'desktop'>, view: Band
           {contextText}
         </Box>
       </Box>
-      <Svg source={SOURCES[view.mode]} alt={ALT[view.mode]} width={WIDTH} height={HEIGHT} isInteractive />
+      <Svg
+        source={SOURCES[view.look][view.mode]}
+        alt={ALT[view.mode]}
+        width={LOOKS[view.look].width}
+        height={LOOKS[view.look].height}
+        isInteractive
+      />
     </Box>
   )
 }

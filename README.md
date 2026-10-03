@@ -47,11 +47,14 @@ The usage figures are the ones Claude Code already has from its last reply, so t
 ## Use
 
 - `/mascot` hides or shows it; `/mascot on` and `/mascot off` work too. The choice is remembered across sessions.
+- `/mascot style` lists the two styles, and `/mascot style <name>` (or just `/mascot <name>`) switches. The choice is remembered across sessions.
+  - `classic` (the default): the laptop at its side, as described above.
+  - `behind`: it sits behind the laptop, seen from the back of the lid, with its eyes peeking over the top. Both hands on the keys while it types, one hand for the coffee, and the lid lifted open or pushed shut in four steps.
 - It draws in the desktop app only. In the terminal it draws nothing.
 
 ## Privacy and cost
 
-No model calls, no network requests and no files written. It reads the clock and the usage figures Claude Code already holds, and keeps its one setting in Claude Code's plugin storage.
+No model calls, no network requests and no files written. It reads the clock and the usage figures Claude Code already holds, and keeps its two settings (shown or hidden, and the style) in Claude Code's plugin storage.
 
 ## Develop
 
@@ -63,6 +66,6 @@ claude plugin validate .
 claude plugin test .
 ```
 
-The art is in `hooks/mascot.ts` (pixel art on a 36 × 19 grid, CSS keyframe loops, SMIL for the click), the band's layout in `hooks/band.tsx`, the formatting in `hooks/info.ts`, and the hooks in `hooks/register.tsx`. The SVG is drawn in a sandboxed frame with no scripts, so every motion is CSS or SMIL. It declares `color-scheme: light dark`, or the desktop app paints the frame white in dark mode.
+The art is in `hooks/looks/` (`classic.ts` and `behind.ts`: pixel art, CSS keyframe loops, SMIL for the click; `index.ts` lists the styles), the band's layout in `hooks/band.tsx`, the formatting in `hooks/info.ts`, and the hooks in `hooks/register.tsx`. The SVG is drawn in a sandboxed frame with no scripts, so every motion is CSS or SMIL. It declares `color-scheme: light dark`, or the desktop app paints the frame white in dark mode.
 
 Claude Code's mod API is in early access and may change between releases.
