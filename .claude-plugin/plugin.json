@@ -1,0 +1,7 @@
+{
+  "name": "claude-mascot",
+  "version": "0.1.0",
+  "author": { "name": "Wazrah" },
+  "description": "A tiny Claude mascot above the prompt: it works while Claude works, takes little breaks, and hops when you click it.",
+  "types": "./types/index.d.ts"
+}
