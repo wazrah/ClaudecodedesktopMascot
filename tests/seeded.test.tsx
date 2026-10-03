@@ -20,8 +20,8 @@ for (const columns of [100, 50]) {
     const ui = await $.ui.mount({ plugin: 'claude-mascot', surface: 'desktop', component: 'Pane', props: PANE, requestId: 'band' })
     const info = JSON.stringify(((await ui.drawn()) as any).children[0])
     // Times are local, so the checks are by shape, not by value.
-    expect(info).toMatch(/\d{2}:\d{2} · [A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2} · Opus 5\.5/)
-    expect(info).toMatch(/↻\d{2}:\d{2}/)
+    expect(info).toMatch(/\d{1,2}:\d{2} [AP]M · [A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2} · Opus 5\.5/)
+    expect(info).toMatch(/↻\d{1,2}:\d{2} [AP]M/)
     expect(info).toMatch(/↻(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/)
     expect(info).toContain('"color":"red"')
     expect(info).toContain('"color":"yellow"')

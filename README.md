@@ -3,8 +3,8 @@
 A tiny pixel Claude that lives above the prompt in the Claude Code desktop app (the Code tab), with a two-line status beside it.
 
 ```
-21:42 · Sat 3 Oct · Opus 5.5
-5h ▰▰▱▱▱ 42% ↻23:10   week ▰▱▱▱▱ 18% ↻Thu   ctx 38%        [mascot]
+9:42 PM · Sat 3 Oct · Opus 5.5
+5h ▰▰▱▱▱ 42% ↻11:10 PM   week ▰▱▱▱▱ 18% ↻Thu   ctx 38%        [mascot]
 ```
 
 **The mascot** sits on the right, about 90 × 48 px, with no background of its own:

@@ -37,7 +37,7 @@ test('formats', () => {
   expect(level(59.9, 60, 85)).toBe('ok')
   expect(level(60, 60, 85)).toBe('warn')
   expect(level(90, 60, 85)).toBe('high')
-  expect(headline(NOW, 'claude-opus-5-5')).toMatch(/^\d{2}:\d{2} · [A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2} · Opus 5\.5$/)
+  expect(headline(NOW, 'claude-opus-5-5')).toMatch(/^\d{1,2}:\d{2} [AP]M · [A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2} · Opus 5\.5$/)
   const u = readUsage([{ kind: 'five_hour', percentUsed: 42, resetsAt: '2026-10-03T20:10:00Z' }, { kind: 'seven_day', percentUsed: 18.5 }], { window: 1000, percent: 38 })
   expect(u).toEqual({ fiveHour: { percent: 42, resetsAt: Date.parse('2026-10-03T20:10:00Z') }, week: { percent: 18.5, resetsAt: null }, context: 38 })
 })

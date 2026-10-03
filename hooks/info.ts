@@ -6,7 +6,7 @@ import type { SessionContextUsage, SessionRateLimit } from 'claude-code'
 
 import type { Meter, Usage } from '../types'
 
-const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+const TWELVE_HOUR = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 const DAY = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
 const WEEKDAY = new Intl.DateTimeFormat('en-GB', { weekday: 'short' })
 
@@ -36,9 +36,12 @@ export function modelLabel(id: string): string {
   return m[3] ? `${family} ${m[2]}.${m[3]}` : `${family} ${m[2]}`
 }
 
-/** `21:42 · Sat 3 Oct · Opus 5.5`, in this computer's own time zone. */
+/** `9:42 PM`: newer ICU puts a narrow no-break space before the AM/PM, which some fonts lack. */
+const clock = (at: number) => TWELVE_HOUR.format(at).replace(/[  ]/g, ' ')
+
+/** `9:42 PM · Sat 3 Oct · Opus 5.5`, in this computer's own time zone. */
 export function headline(at: number, model: string | null): string {
-  const parts = [CLOCK.format(at), DAY.format(at)]
+  const parts = [clock(at), DAY.format(at)]
   if (model) parts.push(modelLabel(model))
   return parts.join(' · ')
 }
@@ -56,5 +59,5 @@ export function bar(percent: number, cells = 5): string {
 }
 
 export const percentLabel = (percent: number) => `${Math.round(percent)}%`
-export const resetTime = (at: number) => CLOCK.format(at)
+export const resetTime = (at: number) => clock(at)
 export const resetDay = (at: number) => WEEKDAY.format(at)
